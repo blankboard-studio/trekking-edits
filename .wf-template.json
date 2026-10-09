@@ -1,3 +1,10 @@
 {
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "template": "brandvm/wf-template",
+  "skills": {
+    "version": "master@63bfb79",
+    "commit": "63bfb7981619b7e21e166dea58bae26fd7a16907",
+    "updated": "2026-10-09"
+  },
+  "created": "2026-10-09"
 }

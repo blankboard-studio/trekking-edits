@@ -1,0 +1,12 @@
+{
+  "prototypeUrl": "http://127.0.0.1:5173",
+  "stagingUrl": "https://trekking-edit.webflow.io",
+  "repoDir": ".",
+  "bundlePattern": "blankboard-studio\\.github\\.io/trekking-edits/(index\\.js|styles\\.css)",
+  "widths": [
+    [1440, 900],
+    [820, 1180],
+    [390, 844]
+  ],
+  "pages": ["/"]
+}

@@ -1,4 +1,4 @@
-# <CLIENT> — Webflow custom code
+# Trekking Edit — Webflow custom code
 
 Agent instructions for this repository. Codex, Cursor and similar tools read
 this file directly; Claude Code reads it through `CLAUDE.md`. It is the single
@@ -6,15 +6,17 @@ source of agent rules — edit this file, never a copy of it.
 
 ## Project facts
 
-Fill these in when the repo is created from the template (`pnpm new-project`).
+Filled in by `pnpm new-project` on 2026-10-09.
 
-- Client / site: `<CLIENT>`
-- GitHub: `<ORG>/<REPO>`, default branch `master`
-- Webflow site ID: `<SITE_ID>`
-- Staging site: `https://<SLUG>.webflow.io`
-- Staging bundles: `https://<ORG>.github.io/<REPO>/`
-- Production domain: `<DOMAIN or "not attached yet">`
-- Production release: `<RELEASE in the head snippet, or "none yet">`
+- Client / site: `Trekking Edit`
+- GitHub: `blankboard-studio/trekking-edits`, default branch `master`
+- Webflow site ID: `69fe5a5c1569da25f0255a11`
+- Staging site: `https://trekking-edit.webflow.io`
+- Staging bundles: `https://blankboard-studio.github.io/trekking-edits/`
+- Production domain: `thetrekkingedit.com` + `www.` — attached, still serving
+  the 2026-05-09 coming-soon page. Publish to webflow.io only (untick the
+  custom domains) until launch.
+- Production release: `none yet`
 
 ## Who owns what
 
