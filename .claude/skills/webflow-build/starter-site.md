@@ -70,8 +70,10 @@ the Designer (a `calc()` with variables can't go through the MCP).
 **D. Page shell and components** (§1, §10), all in the component group
 *Global* and named after their root class:
 - **G | Components**: class G | Components (fixed, 0×0, invisible) and
-  `aria-hidden="true"`; Embeds 2a and 2b with `ORG`/`REPO` placeholders,
-  named in the Navigator.
+  `aria-hidden="true"`. Three embeds, named in the Navigator: an empty
+  **Embed · site code (GTM noscript)** for each project's body-start code
+  (`conventions.md` §1), then Embeds 2a and 2b with `ORG`/`REPO`
+  placeholders.
 - **G | Page W**: Skip link (→ `#main`) › G | Nav W › G | Main W ›
   `main#main` with class G | Main as the slot "G | Main", then
   G | Footer W.

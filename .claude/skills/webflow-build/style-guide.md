@@ -40,13 +40,13 @@ Rebuild the approved page class for class, a go-ahead per batch:
   `src/css/style-guide.css`) before importing any markup, so the
   importer keeps class lists (`lessons/mcp.md`).
 - **Swatches:** the prototype colours each swatch with an inline
-  `style="background: var(--…)"`. In Webflow, either set that as a
-  `style` attribute (check it publishes), or give each role a combo on
-  the swatch class (**Sg Swatch** + **Is Background Page**, …, one per
-  Colors Semantic variable, each binding `background-color` to its
-  variable). The combo route worked on the starter site; it costs a class
-  per role. Show the primitives through the roles unless the person asks
-  for them.
+  `style="background: var(--…)"`. Never import that markup: the WHTML
+  importer turns every `style` attribute into an `inline-div-N` combo
+  (`lessons/mcp.md`). Create one combo per colour role on the swatch class
+  first (**Sg Swatch** + **Is Background Page**, …, one per Colors
+  Semantic variable, each binding `background-color` with
+  `update_style`), then build with classes only. Show the primitives
+  through the roles unless the person asks for them.
 - **Spacing and radius:** a text list of names and values is enough; a
   bar per value needs a class per value.
 - **Buttons:** Webflow Link elements carry the Button classes (the MCP has

@@ -6,6 +6,59 @@ Harvested from client builds made from this template (`Scope:
 template-candidate` entries in their `GOTCHAS.md`). Module and file names
 refer to the project the lesson came from; Status is that project's.
 
+### 2026-10-09 · Upload a local file as an asset without a public URL
+- Area: mcp
+- Symptom: `asset_tool › upload_image_by_url` only takes a public URL, so a
+  locally optimised image or video seemed to need a commit/push or a manual
+  upload.
+- Cause: the Designer-side tool fetches remotely; the Data API route is
+  not obvious.
+- Fix: `data_assets_tool › create_asset` with the file name and the **MD5
+  hex** of the bytes returns `uploadUrl` + `uploadDetails`; POST them as
+  multipart form fields with curl (`-F key=… -F Policy=… -F
+  X-Amz-Signature=… -F Content-Type=… -F "file=@path;type=…"`), expect
+  201. The file is on `cdn.prod.website-files.com` at once and answers byte
+  ranges (206), so MP4s work in Safari. Then set it: an Image element via
+  `set_image_asset`, a component Image prop via
+  `set_component_instance_prop_values` with `type: "string"` and the asset
+  id. An instance showing `hasOverride: false` uses the component default —
+  override that instance rather than changing the default, which other
+  instances inherit. Caution: on another project, uploads made this way
+  stayed at size 0 with no variants and components kept showing their
+  default image (see "API-uploaded assets stay size 0 and don't render in
+  components"). After uploading, check `get_asset` size and variants and
+  look at the published page before relying on it.
+- Status: worked around
+- Found by: claude
+
+### 2026-10-09 · `set_attributes` works on DOM elements, fails on Image elements
+- Area: mcp
+- Symptom: `crossorigin` on an Image element failed with an internal error
+  (twice, Designer connected); Image settings expose no attributes key.
+- Cause: unknown; Image elements don't take custom attributes over the API.
+- Fix: the same call works on DOM elements (`video` `poster`, `source`
+  `src`/`type`/`media`), on Links (`aria-label`, also inside component
+  definitions with `scope_component_id`), on form labels (`for` — Webflow
+  emits `for=""` by default, and the attribute replaces it) and on DOM
+  `button`s. For an Image, add the attribute in the Designer (manual
+  step). CMS-bound attribute values (e.g. `aria-label` = item title on a
+  card link) go through `set_settings` › `attributes` with `value_binding`
+  — it replaces the whole list, so read the existing attributes first.
+- Status: worked around
+- Found by: claude
+
+### 2026-10-09 · `publish_site` wants custom domain IDs, and counts toward the 1/min limit
+- Area: mcp
+- Symptom: `customDomains: ["www.example.com"]` → 400 "valid custom domain
+  ID"; a retry straight after → 429 "at most once per minute".
+- Cause: the parameter takes the domain IDs from `get_site` ›
+  `customDomains[].id`, not hostnames; staging and production publishes
+  share the per-site limit.
+- Fix: read the IDs once (`get_site`); wait out the limit with a timed
+  loop. Staging-only = `publishToWebflowSubdomain: true, customDomains: []`.
+- Status: worked around
+- Found by: claude
+
 ### 2026-10-02 · Only one collection can take breakpoint auto-modes
 - Area: mcp
 - Symptom: `create_variable_mode` with `breakpoint_id` worked for Typography
@@ -430,4 +483,62 @@ refer to the project the lesson came from; Status is that project's.
   published webflow.io page (computed styles in the browser) before
   changing anything else because of a snapshot.
 - Status: open
+- Found by: claude
+
+### 2026-10-09 · WHTML importer turns inline styles into `inline-div-N` combos
+- Area: mcp
+- Symptom: importing style guide swatches written as
+  `<div class="sg-swatch-color" style="background: var(--…)">` created 71
+  new combo classes on Sg Swatch Color, named `inline-div-1` … `-71`, each
+  holding the raw `background: var(--…)` string.
+- Cause: the importer converts every `style` attribute into a combo class
+  instead of keeping it as an attribute or an element style.
+- Fix: never put `style=""` in import markup. Pre-create a role combo per
+  value (e.g. `Is Bg Accent`, `background-color` bound to the variable
+  with `update_style`, which binds `var(--…)` correctly) and import with
+  classes only. If it happened: rename each `inline-div-N` to its role and
+  replace its value with the bound property.
+- Status: workaround confirmed
+- Found by: claude
+
+### 2026-10-09 · API-uploaded assets stay size 0 and don't render in components
+- Area: mcp
+- Symptom: images uploaded through the assets API (presigned S3 upload,
+  201 returned, the CDN served the right bytes) and set on component
+  image props showed the component's default image on the canvas and the
+  published page. `get_asset` reported size 0 and no variants.
+- Cause: Webflow never finished processing the upload, so the asset has
+  no variants and the Designer falls back to the default.
+- Fix: don't rely on API uploads for images used in the Designer. Replace
+  an existing asset in the Designer (Assets panel › Replace), which keeps
+  its id and every usage, or bring images in through a CMS image field
+  (next entry). Check `get_asset` size and variants after any upload.
+- Status: open
+- Found by: claude
+
+### 2026-10-09 · CMS image fields re-host an image from a public URL
+- Area: mcp
+- Symptom: images needed to get into the CMS (and rich-text bodies)
+  without the assets API (see the entry above).
+- Cause: —
+- Fix: set the image field (or the rich-text `<img src>`) to a public URL;
+  Webflow fetches the file and copies it to its own CDN. Host the files
+  temporarily (any public static host), write the items, read them back
+  and check every URL is now on the Webflow CDN, then delete the
+  temporary host. Alt text goes on the image field.
+- Status: workaround confirmed
+- Found by: claude
+
+### 2026-10-09 · A box-shadow with a variable can't be set through the API
+- Area: mcp
+- Symptom: a focus ring's inner band `box-shadow: 0 0 0 2px var(--…)`
+  stored as a plain binding to the colour variable (no shadow), as the
+  "Style values containing `var()`" entry describes.
+- Cause: the style API replaces any value that contains a Webflow variable
+  with a binding to that variable.
+- Fix: set the shadow through the API with the variable's literal value
+  (`0 0 0 2px #1a1aff`), then rebind the colour to the variable in the
+  Designer (shadow colour › variable picker). List those rebinds as
+  manual steps.
+- Status: workaround confirmed
 - Found by: claude
