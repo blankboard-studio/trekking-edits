@@ -25,4 +25,13 @@ collected from client repos into those files.
 
 ## This project
 
+### 2026-10-10 · Template history rewritten after the repo was created
+- Area: ci
+- Scope: template-candidate
+- Symptom: `.wf-template.json` pinned skills to `master@63bfb79`; a day later `brandvm/wf-template` had one commit, `7c48bf0`, and GitHub's compare said "No common ancestor", so the pin could not be diffed.
+- Cause: the template's master was squashed and force-pushed when v0.2.0 was tagged. 0.1.0 was never tagged.
+- Fix: diffed against the `v0.2.0` tarball instead, ran `pnpm update-skills` (it follows the latest tag), and ported the non-skill changes by hand (`loader.html` pieces 2b and 3, `AGENTS.md`, README, `tests/css-swap.spec.mjs`). Template-only files (CHANGELOG, CONTRIBUTING, issue templates, `harvest.mjs`) stay out, as `new-project` removes them.
+- Status: open (template: tag every release and never rewrite master; `update-skills` could also port the non-skill files)
+- Found by: claude
+
 <!-- Add new entries here, newest first. -->

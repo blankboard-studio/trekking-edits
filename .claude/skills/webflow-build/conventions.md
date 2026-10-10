@@ -13,8 +13,9 @@ without restructuring:
 ```
 body
 ├── G | Components         component, class G | Components + aria-hidden="true"
-│                          (fixed, 0×0, invisible): GTM, site-wide scripts and
-│                          embeds, incl. the loader's Embeds 2a (link) and 2b (script)
+│                          (fixed, 0×0, invisible), in this order:
+│                          Embed · site code (GTM noscript), then the loader's
+│                          Embeds 2a (link) and 2b (script), 2b directly after 2a
 └── G | Page W             component, class G | Page W (Barba: data-barba="wrapper")
     ├── Skip link          → #main (first focusable element on every page)
     ├── G | Nav W          component: div G | Nav W › nav G | Nav
@@ -46,6 +47,12 @@ Components carry the name of their root class (**G | Components**,
   `aria-hidden="true"` on its root hides it from screen readers too: only
   code goes in it. Anything visible or focusable that every page needs
   (the skip link, a popup, a banner) goes in G | Page W.
+- **Site code embed** (first child of G | Components, empty in the
+  starter): body-start code every page needs, such as Google Tag Manager's
+  `<noscript>` iframe, which GTM wants right after `<body>` opens.
+  GTM's main `<script>` goes in Site settings › Head code, not here: an
+  Embed runs later than head code, and the canvas skips an Embed that holds
+  a script. Keep 2a and 2b last and adjacent; 2b finds 2a by id.
 
 - **G | Page W is one component on every page**, so anything added to it
   (a band under the footer, a newsletter popup, a banner above the nav)

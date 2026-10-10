@@ -110,7 +110,10 @@ Before writing any CSS, decide where it belongs.
 
 A push updates the JS/CSS bundles only. Any change to `loader.html` must be
 re-pasted into Webflow and published to take effect — say so in the commit
-or PR description, and keep `loader.html` identical to what is installed.
+or PR description, and keep `loader.html` identical to what is installed,
+**except `RELEASE`**: it stays `null` in the repo (the browser tests fail
+otherwise, and with them CI and the staging deploy). The installed version
+lives only in the Webflow head code; record it in Project facts above.
 
 ## Commands and release
 
@@ -147,8 +150,9 @@ Worked around, not fixed — do not rediscover these.
 - The WHTML importer keeps classes that already exist, but drops the whole
   class list if any one is missing (create classes first, then re-check
   `styleNames`). It drops every `<img>` attribute and the asset link, turns
-  `<button>` into a Link and every `<span>` into a text Span, and trims a
-  space before `<br>`. The webflow-build skill's `lessons/mcp.md` has the
+  `<button>` into a Link and every `<span>` into a text Span, turns every
+  `style` attribute into an `inline-div-N` combo class, and trims a space
+  before `<br>`. The webflow-build skill's `lessons/mcp.md` has the
   fixes.
 - `get_all_elements` does not descend into component definitions — pass the
   component scope. An element "missing" from a page is usually inside one.
